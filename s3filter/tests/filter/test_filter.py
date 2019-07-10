@@ -14,6 +14,7 @@ from s3filter.sql.function import timestamp, cast
 from s3filter.util.test_util import gen_test_id
 import pandas as pd
 
+from s3filter.sql.format import Format
 
 def test_filter_baseline():
     """
@@ -21,12 +22,16 @@ def test_filter_baseline():
     :return:
     """
 
-    query_plan = QueryPlan(buffer_size=64)
+    query_plan = QueryPlan(buffer_size=64 ,is_async=True , use_shared_mem=False)
 
     # Query plan
+    '''
     ts = query_plan.add_operator(
-        SQLTableScan('lineitem.csv', 'select * from S3Object limit 3;', False, 'ts', query_plan, False))
-
+        SQLTableScan('lineitem.csv', 'select * from S3Object limit 3;' , False, 'ts', query_plan, False))
+    '''
+# using a 'use_native=True' argument will result in a None object being returned
+    ts = query_plan.add_operator(
+        SQLTableScan('random_strings_2.csv', 'select * from S3Object limit 3;',Format.CSV , True, False,False, 'ts', query_plan, False))
     f = query_plan.add_operator(
         Filter(PredicateExpression(lambda t_: cast(t_['_10'], timestamp) >= cast('1996-03-01', timestamp)),
                'f', query_plan,
@@ -48,7 +53,7 @@ def test_filter_baseline():
     # for t in c.tuples():
     #     num_rows += 1
     #     print("{}:{}".format(num_rows, t))
-
+    print(len(c.tuples()))
     assert 2 + 1 == len(c.tuples())
 
     field_names = ['_0', '_1', '_2', '_3', '_4', '_5', '_6', '_7', '_8', '_9', '_10', '_11', '_12', '_13', '_14', '_15']
@@ -167,3 +172,63 @@ def test_pandas_filter_baseline():
 
     # Write the metrics
     query_plan.print_metrics()
+
+
+
+def test_filter_1():
+    """
+
+    :return:
+    """
+
+    query_plan = QueryPlan(buffer_size=64 ,is_async=True , use_shared_mem=False)
+
+    # Query plan
+    '''
+    ts = query_plan.add_operator(
+        SQLTableScan('lineitem.csv', 'select * from S3Object limit 3;' , False, 'ts', query_plan, False))
+    '''
+# using a 'use_native=True' argument will result in a None object being returned
+    ts = query_plan.add_operator(
+        SQLTableScan('random_strings_2.csv', 'select * from S3Object limit 3; ',Format.CSV , True, False,False, 'ts', query_plan, False))
+    '''
+    f = query_plan.add_operator(
+        Filter(PredicateExpression(lambda t_: cast(t_['_10'], timestamp) >= cast('1996-03-01', timestamp)),
+               'f', query_plan,
+               False))
+    '''
+    c = query_plan.add_operator(Collate('c', query_plan, False))
+     
+    ts.connect(c)
+    #f.connect(c)
+       
+    # Write the plan graph
+    query_plan.write_graph(os.path.join(ROOT_DIR, "../tests-output"), gen_test_id())
+
+    # Start the query
+    query_plan.execute()
+    '''
+    # Assert the results
+    # num_rows = 0
+    # for t in c.tuples():
+    #     num_rows += 1
+    #     print("{}:{}".format(num_rows, t))
+    print(len(c.tuples()))
+    assert 2 + 1 == len(c.tuples())
+
+    field_names = ['_0', '_1', '_2', '_3', '_4', '_5', '_6', '_7', '_8', '_9', '_10', '_11', '_12', '_13', '_14', '_15']
+
+    assert c.tuples()[0] == field_names
+
+    assert c.tuples()[1] == ['1', '155190', '7706', '1', '17', '21168.23', '0.04', '0.02', 'N', 'O', '1996-03-13',
+                             '1996-02-12', '1996-03-22', 'DELIVER IN PERSON', 'TRUCK', 'egular courts above the']
+    '''
+    assert 3 + 1 == len(c.tuples())
+    print(c.tuples())
+    # Write the metrics
+    query_plan.print_metrics()
+    print(ROOT_DIR)
+
+
+
+test_filter_1()

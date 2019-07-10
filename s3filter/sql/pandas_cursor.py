@@ -87,7 +87,7 @@ class PandasCursor(object):
         :return: An iterable of the records fetched
         """
 
-        # print("Executing select_object_content")
+        print("Executing select_object_content")
 
         self.timer.start()
 

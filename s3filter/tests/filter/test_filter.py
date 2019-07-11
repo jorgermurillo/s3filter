@@ -190,7 +190,7 @@ def test_filter_1():
     '''
 # using a 'use_native=True' argument will result in a None object being returned
     ts = query_plan.add_operator(
-        SQLTableScan('random_strings_2.csv', 'select * from S3Object limit 3; ',Format.CSV , True, False,False, 'ts', query_plan, False))
+        SQLTableScan('random_strings_2.csv', 'select f1  from S3Object limit 3;',Format.CSV , True, False,False, 'ts', query_plan, False))
     '''
     f = query_plan.add_operator(
         Filter(PredicateExpression(lambda t_: cast(t_['_10'], timestamp) >= cast('1996-03-01', timestamp)),
@@ -223,7 +223,7 @@ def test_filter_1():
     assert c.tuples()[1] == ['1', '155190', '7706', '1', '17', '21168.23', '0.04', '0.02', 'N', 'O', '1996-03-13',
                              '1996-02-12', '1996-03-22', 'DELIVER IN PERSON', 'TRUCK', 'egular courts above the']
     '''
-    assert 3 + 1 == len(c.tuples())
+    assert 2 + 1 == len(c.tuples())
     print(c.tuples())
     # Write the metrics
     query_plan.print_metrics()

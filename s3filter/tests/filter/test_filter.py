@@ -6,7 +6,8 @@ import os
 
 from s3filter import ROOT_DIR
 from s3filter.op.collate import Collate
-from s3filter.op.filter import Filter
+#from s3filter.op.filter import Filter
+from s3filter.op.project import Project
 from s3filter.op.predicate_expression import PredicateExpression
 from s3filter.op.sql_table_scan import SQLTableScan
 from s3filter.plan.query_plan import QueryPlan
@@ -233,23 +234,22 @@ def test_filter_2():
     '''
 # using a 'use_native=True' argument will result in a None object being returned
     ts = query_plan.add_operator(
-        SQLTableScan('random_strings_2.csv', 'select f1  from S3Object limit 5;',Format.CSV , True, False,False, 'ts', query_plan, False))
-    '''
-    f = query_plan.add_operator(
-        Filter(PredicateExpression(lambda t_: t_['_0']>  "A" ),
-               'f', query_plan,
-               True))
-    '''
-    f = query_plan.add_operator(
-        Filter(PredicateExpression(lambda t_:  True ),
-               'f', query_plan,
-               True))    
+        SQLTableScan('random_strings_2.csv', 'select f1,f2  from S3Object limit 5;',Format.CSV , True, False,False, 'ts', query_plan, False))
+    
+    def  fn(df):
+        df.columns = ["first_col", "second_col"]
+        #We can change the types of the columns
+        #df["first_col"] = df["first_col"].astype(np.int64)
+        return df
+
+    p = query_plan.add_operator(Project([], 'project', query_plan, False, fn))
 
 
     c = query_plan.add_operator(Collate('c', query_plan, False))
 
-    ts.connect(f)
-    f.connect(c)
+    ts.connect(p)
+    p.connect(c)
+
 
     # Write the plan graph
     query_plan.write_graph(os.path.join(ROOT_DIR, "../tests-output"), gen_test_id())

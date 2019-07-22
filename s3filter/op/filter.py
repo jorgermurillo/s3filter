@@ -56,7 +56,7 @@ class Filter(Operator):
             raise Exception("Illegal expression type {}. Expression must be of type PredicateExpression"
                             .format(type(expression), PredicateExpression.__class__.__name__))
         else:
-            self.expression = expression
+	    self.expression = expression
 
         self.field_names_index = None
 
@@ -69,7 +69,7 @@ class Filter(Operator):
         :param producer_name: The producer of the message
         :return: None
         """
-
+	print("2K2K2K")
         # print("Filter | {}".format(t))
         if isinstance(ms, list):
             for m in ms:

@@ -101,7 +101,8 @@ class PandasCursor(object):
 
 	try:	
 		#h1 = http.client.HTTPConnection('127.0.0.1:5000')
-		h1 = http.client.HTTPConnection("3.87.65.94:5000")
+		#h1 = http.client.HTTPConnection("3.87.65.94:5000")
+		h1 = http.client.HTTPConnection(FILTER_IP)
 		print("Connected")
 		
 		h1.request('POST','/' + S3_BUCKET_NAME + '/' + self.s3key, body=self.s3sql)
@@ -109,7 +110,7 @@ class PandasCursor(object):
 		r = h1.getresponse()
 		#print(r.read())
 		r2 = r.read()#.decode("utf-8")
-		print(r2)	
+		#print(r2)	
 		#LOST TO DO!!
 		self.table_data = io.BytesIO()
 		self.table_data.write(r2)

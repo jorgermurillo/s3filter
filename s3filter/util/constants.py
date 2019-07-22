@@ -6,6 +6,7 @@ Place for constants
 
 TPCH_SF = 1
 #S3_BUCKET_NAME = 's3filter'
+FILTER_IP = '54.237.152.194:5000'
 S3_BUCKET_NAME = 'pushdowndb.example'
 TABLE_STORAGE_LOC =''   #'tables/{}/'.format(S3_BUCKET_NAME)
 USE_CACHED_TABLES = False

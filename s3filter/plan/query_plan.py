@@ -346,6 +346,8 @@ class QueryPlan(object):
         # async_operators = {name: o for name, o in filter(lambda (name, o): o.async_, self.operators.items())}
 
         if self.is_async:
+	    print("Operators: ")
+	    print(self.operators)
             operator_completions = {k: False for k, v in self.operators.items()}
             while not all(operator_completions.values()):
                 completed_message = self.listen(OperatorCompletedMessage)

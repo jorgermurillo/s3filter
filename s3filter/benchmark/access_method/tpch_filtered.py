@@ -34,11 +34,23 @@ def run(parallel, use_pandas, buffer_size, table_parts, lower, upper, sf, format
     query_plan = QueryPlan(is_async=parallel, buffer_size=buffer_size)
 
     # SQL scan the file
+    '''
     scan = map(lambda p:
                query_plan.add_operator(
                    SQLTableScan(get_file_key('lineitem', True, p, sf=sf, format_=format_),
                                 "select * from S3Object "
                                 "where cast(l_extendedprice as float) >= {} and cast(l_extendedprice as float) <= {};".format(
+                                    lower, upper), format_,
+                                use_pandas, secure, use_native,
+                                'scan_{}'.format(p), query_plan,
+                                False)),
+               range(0, table_parts))
+    '''
+    scan = map(lambda p:
+               query_plan.add_operator(
+                   SQLTableScan(get_file_key('lineitem', True, p, sf=sf, format_=format_),
+                                "select * from S3Object "
+                                "where l_extendedprice  >= {} and l_extendedprice  <= {};".format(
                                     lower, upper), format_,
                                 use_pandas, secure, use_native,
                                 'scan_{}'.format(p), query_plan,

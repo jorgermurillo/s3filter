@@ -191,13 +191,8 @@ def test_filter_1():
     '''
 # using a 'use_native=True' argument will result in a None object being returned
     ts = query_plan.add_operator(
-        SQLTableScan('random_strings_2.csv', 'select f1  from S3Object limit 5;',Format.CSV , True, False,False, 'ts', query_plan, False))
-    '''
-    f = query_plan.add_operator(
-        Filter(PredicateExpression(lambda t_: cast(t_['_10'], timestamp) >= cast('1996-03-01', timestamp)),
-               'f', query_plan,
-               False))
-    '''
+        SQLTableScan('tpch-sf1/lineitem_sharded/lineitem.csv.0', 'select l_partkey  from S3Object limit 5;',Format.CSV , True, False,False, 'ts', query_plan, False))
+    #random_strings_2.csv
     c = query_plan.add_operator(Collate('c', query_plan, False))
      
     ts.connect(c)

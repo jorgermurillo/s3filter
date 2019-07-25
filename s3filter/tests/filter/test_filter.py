@@ -185,14 +185,16 @@ def test_filter_1():
     query_plan = QueryPlan(buffer_size=64 ,is_async=True , use_shared_mem=False)
 
     # Query plan
-    '''
+    
     ts = query_plan.add_operator(
-        SQLTableScan('lineitem.csv', 'select * from S3Object limit 3;' , False, 'ts', query_plan, False))
-    '''
+        SQLTableScan('tpch-sf1/lineitem_sharded/lineitem.csv.0', 'select * from S3Object where l_extendedprice  >= 0 and l_extendedprice  <= 910;' ,Format.CSV , True, False,False, 'ts', query_plan, False))
+    
 # using a 'use_native=True' argument will result in a None object being returned
+    '''
     ts = query_plan.add_operator(
         SQLTableScan('tpch-sf1/lineitem_sharded/lineitem.csv.0', 'select l_partkey  from S3Object limit 5;',Format.CSV , True, False,False, 'ts', query_plan, False))
     #random_strings_2.csv
+    '''
     c = query_plan.add_operator(Collate('c', query_plan, False))
      
     ts.connect(c)

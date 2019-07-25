@@ -34,7 +34,7 @@ def run(parallel, use_pandas, buffer_size, table_parts, lower, upper, sf, format
     query_plan = QueryPlan(is_async=parallel, buffer_size=buffer_size)
 
     # SQL scan the file
-    '''
+    
     scan = map(lambda p:
                query_plan.add_operator(
                    SQLTableScan(get_file_key('lineitem', True, p, sf=sf, format_=format_),
@@ -56,7 +56,7 @@ def run(parallel, use_pandas, buffer_size, table_parts, lower, upper, sf, format
                                 'scan_{}'.format(p), query_plan,
                                 False)),
                range(0, table_parts))
-
+    '''
     # project
     def fn(df):
         df.columns = ['l_orderkey', 'l_partkey', 'l_suppkey', 'l_linenumber', 'l_quantity', 'l_extendedprice',

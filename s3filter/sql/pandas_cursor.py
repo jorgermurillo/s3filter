@@ -91,6 +91,7 @@ class PandasCursor(object):
 	All operations return a CSV file
 	"""
 	print("Executing Pandas cursor!")
+	self.timer.start()
 	self.input = Format.CSV
 	
 	config = TransferConfig(
@@ -98,15 +99,15 @@ class PandasCursor(object):
                 multipart_threshold=8 * MB
 	)
 			
-
+	
 	try:	
 		#h1 = http.client.HTTPConnection('127.0.0.1:5000')
 		#h1 = http.client.HTTPConnection("3.87.65.94:5000")
 		h1 = http.client.HTTPConnection(FILTER_IP)
-		print("Connected")
+		#print("Connected")
 		
 		h1.request('POST','/' + S3_BUCKET_NAME + '/' + self.s3key, body=self.s3sql)
-		print("Made request!")
+		#print("Made request!")
 		r = h1.getresponse()
 		#print(r.read())
 		r2 = r.read()#.decode("utf-8")
@@ -115,15 +116,15 @@ class PandasCursor(object):
 		self.table_data = io.BytesIO()
 		self.table_data.write(r2)
 		
-		print("HELLO!")
-		print(self.table_data.getvalue().decode('utf-8'))
+		#print("HELLO!")
+		#print(self.table_data.getvalue().decode('utf-8'))
 		self.num_http_get_requests = PandasCursor.calculate_num_http_requests(self.table_data, config)		
 	
 		return self.parse_file()	
 	except Exception as e:
 		print(e)
         
-	return self.parse_file()
+	#return self.parse_file()
 
     def parse_event_stream(self):
         """Generator that hands out records from the event stream lazily
@@ -216,7 +217,7 @@ class PandasCursor(object):
                 raise Exception("Unrecognized event {}".format(event))
 
     def parse_file(self):
-        try:
+        #try:
             if self.input is Format.CSV:
                 if self.table_data and len(self.table_data.getvalue()) > 0:
                     ip_stream = cStringIO.StringIO(self.table_data.getvalue().decode('utf-8'))
@@ -226,7 +227,8 @@ class PandasCursor(object):
                     return
 
                 self.time_to_first_record_response = self.time_to_last_record_response = self.timer.elapsed()
-
+		#print("Printing ipstream:")
+		#print(ip_stream.getvalue())
                 for df in pd.read_csv(ip_stream, delimiter='|',
                                       header=None,
                                       prefix='_', dtype=numpy.str,
@@ -250,11 +252,11 @@ class PandasCursor(object):
                 yield table.to_pandas()
             else:
                 raise Exception("Unrecognized input type '{}'".format(self.input))
-
-        except Exception as e:
-            print("can not read table data at with error {}".format(e.message))
-            raise e
-
+	
+        #except Exception as e:
+        #    print("can not read table data at with error {}".format(e.message))
+        #    raise e
+	
     def close(self):
         """Closes the s3 event stream
 

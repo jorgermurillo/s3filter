@@ -295,7 +295,9 @@ class SQLTableScan(Operator):
             counter = 0
 
             buffer_ = pd.DataFrame()
-            for df in dfs:
+            #print("DataFrames: ")
+	    #print(dfs)
+	    for df in dfs:
                 if op.fn:
                     df = op.fn(df)
 

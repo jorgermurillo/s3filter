@@ -9,6 +9,7 @@ import math
 import numpy
 import pandas as pd
 import pyarrow.parquet as pq
+import json
 from boto3.s3.transfer import TransferConfig, MB
 
 from s3filter.sql.format import Format
@@ -106,7 +107,18 @@ class PandasCursor(object):
 		h1 = http.client.HTTPConnection(FILTER_IP)
 		print("Connected")
 		
-		h1.request('POST','/' + S3_BUCKET_NAME + '/' + self.s3key, body=self.s3sql)
+        body_ = None
+
+        if self.input is Format.CSV:
+            body_ = json.dumps({"query":self.s3sql, "input":"CSV"})
+        elif self.input is Format.PARQUET:
+            body_ = json.dumps({"query":self.s3sql, "input":"PARQUET"})
+        else:
+            raise Exception("Unrecognised InputType {}".format(self.input))
+
+
+
+		h1.request('POST','/' + S3_BUCKET_NAME + '/' + self.s3key, body=body_)
 		print("Made request!")
 		r = h1.getresponse()
 		#print(r.read())

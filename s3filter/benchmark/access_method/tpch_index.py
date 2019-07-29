@@ -50,7 +50,7 @@ def run(parallel, use_pandas, buffer_size, table_parts, lower, upper, sf, nthrea
     # Range accesses 
     range_access = map(lambda p:
                        query_plan.add_operator(
-                           TableRangeAccess(get_file_key('lineitem', True, p, sf=sf),
+                           TableRangeAccess(get_file_key('lineitem', True, p, sf=sf,format_=Format.CSV),
                                             use_pandas, secure, use_native,
                                             'range_access_{}'.format(p), query_plan,
                                             False)),

@@ -93,7 +93,7 @@ class PandasCursor(object):
 	"""
 	print("Executing Pandas cursor!")
 	self.timer.start()
-	self.input = Format.CSV
+	#self.input = Format.CSV
 	
 	config = TransferConfig(
                 multipart_chunksize=8 * MB,
@@ -107,18 +107,18 @@ class PandasCursor(object):
 		h1 = http.client.HTTPConnection(FILTER_IP)
 		print("Connected")
 		
-        body_ = None
+        	request_body = None
 
-        if self.input is Format.CSV:
-            body_ = json.dumps({"query":self.s3sql, "input":"CSV"})
-        elif self.input is Format.PARQUET:
-            body_ = json.dumps({"query":self.s3sql, "input":"PARQUET"})
-        else:
-            raise Exception("Unrecognised InputType {}".format(self.input))
+        	if self.input is Format.CSV:
+            		request_body = json.dumps({"query":self.s3sql, "input":"CSV"})
+       		elif self.input is Format.PARQUET:
+            		request_body = json.dumps({"query":self.s3sql, "input":"PARQUET"})
+        	else:
+            		raise Exception("Unrecognised InputType {}".format(self.input))
 
 
 
-		h1.request('POST','/' + S3_BUCKET_NAME + '/' + self.s3key, body=body_)
+		h1.request('POST','/' + S3_BUCKET_NAME + '/' + self.s3key, body=request_body)
 		print("Made request!")
 		r = h1.getresponse()
 		#print(r.read())

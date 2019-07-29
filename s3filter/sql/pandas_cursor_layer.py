@@ -230,40 +230,30 @@ class PandasCursor(object):
 
     def parse_file(self):
         #try:
-            if self.input is Format.CSV:
-                if self.table_data and len(self.table_data.getvalue()) > 0:
-                    ip_stream = cStringIO.StringIO(self.table_data.getvalue().decode('utf-8'))
-                elif os.path.exists(self.table_local_file_path):
-                    ip_stream = self.table_local_file_path
-                else:
-                    return
-
-                self.time_to_first_record_response = self.time_to_last_record_response = self.timer.elapsed()
-		print("Printing ipstream:")
-		print(ip_stream.getvalue())
-                for df in pd.read_csv(ip_stream, delimiter='|',
-                                      header=None,
-                                      prefix='_', dtype=numpy.str,
-                                      engine='c', quotechar='"', na_filter=False, compression=None, low_memory=False,
-                                      skiprows=1,
-                                      chunksize=10 ** 7):
-                    # Get read bytes
-                    self.bytes_returned += ip_stream.tell()
-
-                    # drop last column since the line separator | creates a new empty column at the end of every record
-                    df_col_names = list(df)
-                    last_col = df_col_names[-1]
-                    df.drop(last_col, axis=1, inplace=True)
-
-                    yield df
-            elif self.input is Format.PARQUET:
-
-                table = pq.read_table(self.table_data)
-                self.table_data = None
-
-                yield table.to_pandas()
-            else:
-                raise Exception("Unrecognized input type '{}'".format(self.input))
+    #if self.input is Format.CSV:
+        if self.table_data and len(self.table_data.getvalue()) > 0:
+            ip_stream = cStringIO.StringIO(self.table_data.getvalue().decode('utf-8'))
+        elif os.path.exists(self.table_local_file_path):
+            ip_stream = self.table_local_file_path
+        else:
+            retur
+        self.time_to_first_record_response = self.time_to_last_record_response = self.timer.elapsed()
+	    print("Printing ipstream:")
+	    print(ip_stream.getvalue())
+        for df in pd.read_csv(ip_stream, delimiter='|',
+                              header=None,
+                              prefix='_', dtype=numpy.str,
+                              engine='c', quotechar='"', na_filter=False, compression=None, low_memory=False,
+                              skiprows=1,
+                              chunksize=10 ** 7):
+            # Get read bytes
+            self.bytes_returned += ip_stream.tell(
+            # drop last column since the line separator | creates a new empty column at the end of every record
+            df_col_names = list(df)
+            last_col = df_col_names[-1]
+            df.drop(last_col, axis=1, inplace=True
+            yield df
+            
 	
         #except Exception as e:
         #    print("can not read table data at with error {}".format(e.message))

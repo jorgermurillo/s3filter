@@ -22,7 +22,8 @@ import numpy as np
 
 
 def sql_scan_lineitem_operator_def(sharded, shard, sf, use_pandas, secure, use_native, name, query_plan, format_):
-    return SQLTableScan(get_file_key('lineitem', sharded, shard, sf),
+    print(format_)
+    return SQLTableScan(get_file_key('lineitem', sharded, shard, sf, format_),
                         "select * from S3Object;", format_, use_pandas, secure, use_native,
                         name, query_plan,
                         False)

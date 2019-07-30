@@ -69,7 +69,7 @@ class Filter(Operator):
         :param producer_name: The producer of the message
         :return: None
         """
-	print("2K2K2K")
+	#print("2K2K2K")
         # print("Filter | {}".format(t))
         if isinstance(ms, list):
             for m in ms:

@@ -49,7 +49,7 @@ def run(sf, parallel, use_pandas, secure, use_native, buffer_size, lineitem_part
                                 'lineitem_scan' + '_' + str(p),
                                 query_plan, format_)),
                         range(0, lineitem_parts))
-
+    '''
     lineitem_project = map(lambda p:
                            query_plan.add_operator(
                                tpch_q1.project_lineitem_operator_def(
@@ -104,6 +104,12 @@ def run(sf, parallel, use_pandas, secure, use_native, buffer_size, lineitem_part
     map(lambda (p, o): o.connect(groupby[p]), enumerate(lineitem_filter))
     map(lambda (p, o): o.connect(groupby_reduce), enumerate(groupby))
     groupby_reduce.connect(collate)
+    '''
+    
+    collate = query_plan.add_operator(
+        Collate('collate', query_plan, False))
+    map(lambda (o): o.connect(collate),  lineitem_scan)
+
 
     # Plan settings
     print('')

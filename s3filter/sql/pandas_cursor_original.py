@@ -70,6 +70,7 @@ class PandasCursor(object):
         """
 
         self.s3key = s3key
+        print("S3 Key:" + s3key)
         self.s3sql = s3sql
 
         # TODO:only simple SQL queries are considered. Nested and complex queries will need a lot of work to handle

@@ -729,7 +729,7 @@ def get_sql_suffix(key, num_shards, shard, sharded, add_where=False):
         part_field_min_val = math.ceil((total_distinct_field_vals / float(num_shards)) * shard) + field_min_val
         part_field_max_val = math.ceil((total_distinct_field_vals / float(num_shards)) * (shard + 1)) + field_min_val
 
-        sql_suffix = " cast({} as int) >= {} and cast({} as int) < {}" \
+        sql_suffix = " {} >= {} and {}  < {}" \
             .format(field_name, part_field_min_val, field_name, part_field_max_val)
 
         sql_suffix = " where " + sql_suffix if add_where else " and " + sql_suffix

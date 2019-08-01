@@ -202,6 +202,8 @@ class PandasCursor(object):
                     records_str_rdr.flush()
                     records_str_rdr.close()
                     yield df
+                else:
+                    yield pd.DataFrame()
 
                 return
 

@@ -302,7 +302,7 @@ class SQLTableScan(Operator):
                     df = op.fn(df)
 
                 if first_tuple:
-                    assert (len(df.columns.values) > 0)
+                    # assert (len(df.columns.values) > 0)
                     # op.send(TupleMessage(Tuple(df.columns.values)), op.consumers)
                     first_tuple = False
 

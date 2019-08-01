@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 import numpy
 
 from s3filter import ROOT_DIR
-from s3filter.benchmark.tpch import tpch_results
+from s3filter.benchmark.tpch_layer import tpch_results
 from s3filter.op.aggregate import Aggregate
 from s3filter.op.aggregate_expression import AggregateExpression
 from s3filter.op.hash_join_build import HashJoinBuild
@@ -19,7 +19,7 @@ from s3filter.op.map import Map
 from s3filter.op.operator_connector import connect_many_to_many, connect_all_to_all, connect_many_to_one, \
     connect_one_to_one
 from s3filter.plan.query_plan import QueryPlan
-from s3filter.query import tpch_q14
+from s3filter.query_layer import tpch_q14
 from s3filter.sql.format import Format
 from s3filter.util.test_util import gen_test_id
 import s3filter.util.constants

@@ -16,9 +16,9 @@ from s3filter.op.project import Project, ProjectExpression
 from s3filter.op.sql_table_scan import SQLTableScan
 from s3filter.op.sql_table_scan_bloom_use import SQLTableScanBloomUse
 from s3filter.plan.query_plan import QueryPlan
-from s3filter.query.tpch_q19 import get_sql_suffix
+from s3filter.query_layer.tpch_q19 import get_sql_suffix
 from s3filter.sql.function import cast, timestamp
-from s3filter.query.tpch import get_file_key
+from s3filter.query_layer.tpch import get_file_key
 import pandas as pd
 import numpy as np
 
@@ -194,7 +194,7 @@ def sql_scan_part_partkey_where_brand12_operator_def(sharded, shard, num_shards,
                         "  S3Object "
                         "where "
                         "  p_brand = 'Brand#12' and "
-                        "  cast(p_partkey as int) >= {} and cast(p_partkey as int) < {} "
+                        "  p_partkey >= {} and p_partkey  < {} "
                         " ".format(key_lower, key_upper), format_, use_pandas, secure, use_native,
                         name, query_plan,
                         False)
@@ -322,8 +322,8 @@ def sql_scan_lineitem_partkey_extendedprice_discount_where_shipdate_sharded_oper
                         "from "
                         "  S3Object "
                         "where "
-                        "  cast(l_shipdate as timestamp) >= cast(\'{}\' as timestamp) and "
-                        "  cast(l_shipdate as timestamp) < cast(\'{}\' as timestamp) "
+                        "  l_shipdate  >= \'{}\'  and "
+                        "  l_shipdate  < \'{}\'  "
                         "  {}"
                         ";".format(min_shipped_date.strftime('%Y-%m-%d'),
                                    max_shipped_date.strftime('%Y-%m-%d'),
@@ -348,8 +348,8 @@ def sql_scan_lineitem_where_shipdate_sharded_operator_def(min_shipped_date,
     return SQLTableScan(get_file_key('lineitem', sharded, shard, sf),
                         "select * from S3Object "
                         "where "
-                        "  cast(l_shipdate as timestamp) >= cast(\'{}\' as timestamp) and "
-                        "  cast(l_shipdate as timestamp) < cast(\'{}\' as timestamp) "
+                        "  l_shipdate  >= \'{}\'  and "
+                        "  l_shipdate  < \'{}\'  "
                         ";".format(min_shipped_date.strftime('%Y-%m-%d'),
                                    max_shipped_date.strftime('%Y-%m-%d')), format_, use_pandas, secure, use_native,
                         name, query_plan,
@@ -370,9 +370,9 @@ def sql_scan_lineitem_partkey_extendedprice_discount_where_shipdate_partitioned_
                         "from "
                         "  S3Object "
                         "where "
-                        "  cast(l_shipdate as timestamp) >= cast(\'{}\' as timestamp) and "
-                        "  cast(l_shipdate as timestamp) < cast(\'{}\' as timestamp) and "
-                        "  cast(l_orderkey as int) >= {} and cast(l_orderkey as int) < {} "
+                        "  l_shipdate  >= \'{}\'  and "
+                        "  l_shipdate  < \'{}\'  and "
+                        "  l_orderkey  >= {} and l_orderkey  < {} "
                         ";".format(min_shipped_date.strftime('%Y-%m-%d'),
                                    max_shipped_date.strftime('%Y-%m-%d'),
                                    key_lower,
@@ -453,7 +453,7 @@ def bloom_scan_part_partkey_type_brand12_operator_def(sharded, shard, num_shards
                                 "  S3Object "
                                 "where "
                                 "  p_brand = 'Brand#12' and "
-                                "  cast(p_partkey as int) >= {} and cast(p_partkey as int) < {} "
+                                "  p_partkey  >= {} and p_partkey  < {} "
                                 " ".format(key_lower, key_upper),
                                 'p_partkey', use_pandas, secure, use_native,
                                 name, query_plan,
@@ -470,8 +470,8 @@ def bloom_scan_lineitem_where_shipdate_operator_def(min_shipped_date, max_shippe
                                 "from "
                                 "  S3Object "
                                 "where "
-                                "  cast(l_shipdate as timestamp) >= cast(\'{}\' as timestamp) and "
-                                "  cast(l_shipdate as timestamp) < cast(\'{}\' as timestamp) "
+                                "  l_shipdate  >= \'{}\'  and "
+                                "  l_shipdate  < \'{}\'  "
                                 "  {}"
                                 " ".format(
                                     min_shipped_date.strftime('%Y-%m-%d'),
@@ -500,9 +500,9 @@ def bloom_scan_lineitem_where_shipdate_sharded_operator_def(min_shipped_date, ma
                                 "from "
                                 "  S3Object "
                                 "where "
-                                "  cast(l_shipdate as timestamp) >= cast(\'{}\' as timestamp) and "
-                                "  cast(l_shipdate as timestamp) < cast(\'{}\' as timestamp) and "
-                                "  cast(l_orderkey as int) >= {} and cast(l_orderkey as int) < {} "
+                                "  l_shipdate  >= \'{}\'  and "
+                                "  l_shipdate  < \'{}\'  and "
+                                "  l_orderkey  >= {} and l_orderkey  < {} "
                                 " ".format(
                                     min_shipped_date.strftime('%Y-%m-%d'),
                                     max_shipped_date.strftime('%Y-%m-%d'),
@@ -523,8 +523,8 @@ def bloom_scan_lineitem_partkey_where_shipdate_operator_def(min_shipped_date, ma
                                 "from "
                                 "  S3Object "
                                 "where "
-                                "  cast(l_shipdate as timestamp) >= cast(\'{}\' as timestamp) and "
-                                "  cast(l_shipdate as timestamp) < cast(\'{}\' as timestamp) "
+                                "  l_shipdate >= \'{}\'  and "
+                                "  l_shipdate < \'{}\'  "
                                 " ".format(
                                     min_shipped_date.strftime('%Y-%m-%d'),
                                     max_shipped_date.strftime('%Y-%m-%d'))

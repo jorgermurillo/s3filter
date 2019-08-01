@@ -3,8 +3,8 @@
 
 """
 
-from s3filter.benchmark.tpch import tpch_q14_baseline_join, tpch_results, tpch_q14_filtered_join, tpch_q14_bloom_join
-from s3filter.benchmark.tpch.run_tpch import start_capture, end_capture
+from s3filter.benchmark.tpch_layer import tpch_q14_baseline_join, tpch_results, tpch_q14_filtered_join, tpch_q14_bloom_join
+from s3filter.benchmark.tpch_layer.run_tpch import start_capture, end_capture
 from s3filter.sql.format import Format
 
 

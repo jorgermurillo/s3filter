@@ -233,19 +233,12 @@ def test_filter_arg(object_):
     ts = query_plan.add_operator(
         SQLTableScan(object_, 'select *  from S3Object ;',Format.CSV , True, False,False, 'ts', query_plan, False))
     
-    def  fn(df):
-        df.columns = ["first_col", "second_col"]
-        #We can change the types of the columns
-        #df["first_col"] = df["first_col"].astype(np.int64)
-        return df
-
-    p = query_plan.add_operator(Project([], 'project', query_plan, False, fn))
+   
 
 
     c = query_plan.add_operator(Collate('c', query_plan, False))
 
-    ts.connect(p)
-    p.connect(c)
+    ts.connect(c)
 
 
     # Write the plan graph

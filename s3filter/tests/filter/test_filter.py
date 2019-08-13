@@ -215,7 +215,7 @@ def test_filter_1():
 
 
 
-def test_filter_2():
+def test_filter_arg(object_):
     # Let's forget about the local filter for now. The pd._expr field of the PredicateExpression class is not well documented and it is needed for the Filter class (on line 102).
     """
 
@@ -231,7 +231,7 @@ def test_filter_2():
     '''
 # using a 'use_native=True' argument will result in a None object being returned
     ts = query_plan.add_operator(
-        SQLTableScan('random_strings_2.csv', 'select f1,f2  from S3Object limit 5;',Format.CSV , True, False,False, 'ts', query_plan, False))
+        SQLTableScan(object_, 'select *  from S3Object ;',Format.CSV , True, False,False, 'ts', query_plan, False))
     
     def  fn(df):
         df.columns = ["first_col", "second_col"]
@@ -261,5 +261,10 @@ def test_filter_2():
     query_plan.print_metrics()
     print(ROOT_DIR)
 
-test_filter_1()
+test_filter_arg('test_table.csv')
 
+test_filter_arg('partsupp.tbl')
+
+test_filter_arg('lineitem.tbl')
+
+test_filter_arg('big_file.tbl')

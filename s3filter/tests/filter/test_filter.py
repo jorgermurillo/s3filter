@@ -215,7 +215,7 @@ def test_filter_1():
 
 
 
-def test_filter_arg(object_):
+def test_filter_arg(object_, sql_query):
     # Let's forget about the local filter for now. The pd._expr field of the PredicateExpression class is not well documented and it is needed for the Filter class (on line 102).
     """
 
@@ -231,7 +231,7 @@ def test_filter_arg(object_):
     '''
 # using a 'use_native=True' argument will result in a None object being returned
     ts = query_plan.add_operator(
-        SQLTableScan(object_, 'select *  from S3Object ;',Format.CSV , True, False,False, 'ts', query_plan, False))
+        SQLTableScan(object_, sql_query, Format.CSV , True, False,False, 'ts', query_plan, False))
     
    
 
@@ -254,6 +254,13 @@ def test_filter_arg(object_):
     query_plan.print_metrics()
     print(ROOT_DIR)
 
+queries= [ "select * from S3Object where cast(l_extendedprice as float) >= {} and cast(l_extendedprice as float) <= {};".format(0, 910) ,'select *  from S3Object ;']
+for q in queries:
+    for i in range(10):
+        test_filter_arg('lineitem_725M.tbl', q)
+
+
+'''
 test_filter_arg('test_table.csv')
 
 test_filter_arg('partsupp.tbl')
@@ -261,3 +268,4 @@ test_filter_arg('partsupp.tbl')
 test_filter_arg('lineitem.tbl')
 
 test_filter_arg('big_file.tbl')
+'''

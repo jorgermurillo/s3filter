@@ -254,7 +254,7 @@ def test_filter_arg(object_, sql_query):
     query_plan.print_metrics()
     print(ROOT_DIR)
 
-queries= [ "select * from S3Object where cast(l_extendedprice as float) >= {} and cast(l_extendedprice as float) <= {};".format(0, 910) ,'select *  from S3Object ;']
+queries= [ "select * from S3Object where cast(l_extendedprice as float) >= {} and cast(l_extendedprice as float) <= {};".format(0, 910) ,'select * from S3Object ;']
 for q in queries:
     for i in range(10):
         test_filter_arg('lineitem_725M.tbl', q)

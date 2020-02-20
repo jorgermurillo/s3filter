@@ -24,7 +24,7 @@ def main(sf, lineitem_parts, sharded, format_):
     run(sf, True, True, False, False, 0, lineitem_parts, sharded, format_)
 
 
-def run(sf, parallel, use_pandas, secure, use_native, buffer_size, lineitem_parts, sharded, format_):
+def run(sf, parallel, use_pandas, secure, use_native, buffer_sizje, lineitem_parts, sharded, format_):
     """
 
     :return: None
@@ -105,7 +105,12 @@ def run(sf, parallel, use_pandas, secure, use_native, buffer_size, lineitem_part
     map(lambda (p, o): o.connect(groupby_reduce), enumerate(groupby))
     groupby_reduce.connect(collate)
     '''
-    
+    groupby = map(lambda p:
+                  query_plan.add_operator(
+                      tpch_q1.groupby_returnflag_linestatus_operator_def(
+                          'groupby' + '_' + str(p),
+                          query_plan)),
+                  range(0, lineitem_parts))
     collate = query_plan.add_operator(
         Collate('collate', query_plan, False))
     map(lambda (o): o.connect(collate),  lineitem_scan)
